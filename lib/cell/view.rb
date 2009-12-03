@@ -33,11 +33,22 @@ module Cell
       
       super(options, local_assigns, &block)
     end
-    
-    
+
     def expand_view_path(path)
       path = "#{cell.cell_name}/#{path}" unless path.include?('/')  
       path
+    end
+
+    if ::ActionView::Base.cache_template_loading?
+
+      def view_paths
+        @@view_paths
+      end
+
+      def view_paths=(paths)
+        @@view_paths ||= self.class.process_view_paths(paths)
+      end
+
     end
     
     # this prevents cell ivars from being overwritten by same-named
